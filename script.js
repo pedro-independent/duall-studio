@@ -140,3 +140,57 @@ industryTl.to(".industry-item.is--one", { scale: 6, y: "-50vh" })
   .to(".industry-item.is--two", { scale: 6, y: "-50vh" },"<0.1") 
   .to(".industry-item.is--three", { scale: 6, y: "-50vh" },"<0.1")
   .to(".industry-item.is--four",  { scale: 6, y: "-50vh" },"<0.1");
+
+
+/* Awards Hover Effects */
+
+const awardsItems = document.querySelectorAll(".awards-item");
+
+gsap.set(".awards-h3", { visibility: "hidden" });
+gsap.set(".award-img", { display: "none", scale: 0 });
+
+awardsItems.forEach((item) => {
+  item.addEventListener("mouseenter", () => {
+    // Animate the current item
+    gsap.to(item.querySelector(".awards-fill"), { height: "100%", duration: 0.3 });
+    gsap.to(item.querySelector("h3"), { x: "1.875em", color: "#ffffff", duration: 0.3 });
+    gsap.to(item.querySelector(".awards-h3"), { x: "-1.875em", visibility: "visible", duration: 0.3 });
+    gsap.to(item.querySelector(".award-img"), { display: "block", scale: 1, duration: 0.3 });
+    gsap.to(item, { borderWidth: "0px", duration: 0.3 });
+
+    // Animate the previous sibling (if it exists)
+    const previousItem = item.previousElementSibling;
+    if (previousItem) {
+      gsap.to(previousItem, { borderWidth: "0px", duration: 0.3 });
+    }
+
+    // Check if the item is the first or last child, and remove the border on the parent (.awards-list)
+    const parent = item.closest(".awards-list");
+    if (item === parent.firstElementChild || item === parent.lastElementChild) {
+      gsap.to(parent, { borderWidth: "0px", duration: 0.3 });
+    }
+  });
+
+  item.addEventListener("mouseleave", () => {
+    // Revert animations on the current item
+    gsap.to(item.querySelector(".awards-fill"), { height: "0%", duration: 0.3 });
+    gsap.to(item.querySelector("h3"), { x: 0, color: "#060606", duration: 0.3 });
+    gsap.to(item.querySelector(".awards-h3"), { x: 0, visibility: "hidden", duration: 0.3 });
+    gsap.to(item.querySelector(".award-img"), { display: "none", scale: 0, duration: 0.3 });
+    gsap.to(item, { borderWidth: "1px", duration: 0.3 });
+
+    // Revert the border of the previous sibling if it exists
+    const previousItem = item.previousElementSibling;
+    if (previousItem) {
+      gsap.to(previousItem, { borderWidth: "1px", duration: 0.3 });
+    }
+
+    // Revert the border of the parent (.awards-list) if the item is the first or last child
+    const parent = item.closest(".awards-list");
+    if (item === parent.firstElementChild || item === parent.lastElementChild) {
+      gsap.to(parent, { borderWidth: "1px", duration: 0.3 });
+    }
+  });
+});
+
+
