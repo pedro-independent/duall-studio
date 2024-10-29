@@ -38,11 +38,10 @@ phoneTl.to(
 
 let motiveTl = gsap.timeline({
   scrollTrigger: {
-    trigger: ".studio-motive-wrap",
-    start: "top 70%",
-    end: "bottom center",
+    trigger: ".studio-animation-wrapper",
+    start: "top center",
+    end: "center center",
     scrub: true,
-    markers: false,
   },
 });
 
@@ -62,40 +61,82 @@ motiveTl.to(
 let tlStudio = gsap.timeline({
   scrollTrigger: {
     trigger: ".studio-animation-wrapper",
-    start: "top center",
+    start: "top 40%",
     end: "bottom center",
     scrub: true,
-    //markers: true,
   },
 });
 
 tlStudio.to(".studio-img-wrap", {
   width: "100%",
   height: "100vh",
+  onComplete: () => ScrollTrigger.refresh()
 });
 
 tlStudio.to(
   ".studio-img.is--one",
   {
-    zIndex: 1,
-  },
-  "<0.3"
+    visibility: "hidden",
+  }, "<0.1"
 );
 
-tlStudio.to(".studio-img.is--three", {
-  zIndex: 3,
-});
+tlStudio.to(
+  ".studio-img.is--two",
+  {
+    visibility: "hidden",
+  }
+);
+
+
+/* Values and Industry color change */
+
+// Splits text into lines
+const valuesText = new SplitType('.values-heading h2', { types: 'words' });
+const industryText = new SplitType('.industry-heading h2', { types: 'words' });
+
+gsap.fromTo(
+  ".values-heading h2 .word",
+  { opacity: 0.4 },
+  { 
+    opacity: 1,
+    stagger: 0.5,
+    scrollTrigger: {
+      trigger: ".values-heading",
+      start: "top center",
+      end: "bottom 40%",
+      scrub: true,
+    }
+  }
+);
+
+gsap.fromTo(
+  ".industry-heading h2 .word",
+  { opacity: 0.4 },
+  { 
+    opacity: 1,
+    stagger: 0.5,
+    scrollTrigger: {
+      trigger: ".industry-heading",
+      start: "top center",
+      end: "bottom 40%",
+      scrub: true,
+    }
+  }
+);
+
 
 /* Industries Expanding */
 
-gsap.to(".industry-item", {
+const industryTl = gsap.timeline({
   scrollTrigger: {
     trigger: ".industry-list-wrapper",
-    start: "top 60%",
+    start: "top 70%",
     end: "bottom top",
     scrub: true,
-    //markers: true,
-  },
-  scale: 4,
-  stagger: 0.2,
+  }
 });
+
+industryTl.to(".industry-item.is--one", { scale: 6, y: "-50vh" })
+  .to(".industry-item.is--two", { scale: 6, y: "-50vh" },"<0.1") 
+  .to(".industry-item.is--three", { scale: 6, y: "-50vh" },"<0.1")
+  .to(".industry-item.is--four",  { scale: 6, y: "-50vh" },"<0.1");
