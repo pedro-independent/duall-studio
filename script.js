@@ -193,4 +193,60 @@ awardsItems.forEach((item) => {
   });
 });
 
+/* Projects Parallax */
 
+// Function to get y translation based on image height
+const getY = (element) => {
+  const height = element.clientHeight;
+  const maxScrollSpeed = -300; // Negative maximum scroll speed for smallest images
+  const minScrollSpeed = -10; // Negative minimum scroll speed for largest images
+  const referenceHeight = 500; // Reference height for scaling
+
+  // Adjust speed factor based on the height relative to the reference height
+  const speedFactor =
+    maxScrollSpeed +
+    (height / referenceHeight) * (minScrollSpeed - maxScrollSpeed);
+  console.log({ height, speedFactor });
+  return speedFactor;
+};
+
+document.querySelectorAll(".work-item").forEach((project) => {
+  gsap.to(project, {
+    y: getY(project),
+    ease: "none",
+    scrollTrigger: {
+      trigger: project,
+      start: "top bottom",
+      end: "bottom top",
+      scrub: 1,
+    },
+  });
+});
+
+
+/* Contact Section GIF cursor trail */
+
+document.querySelector(".section_contact").addEventListener("mousemove", (event) => {
+  // Create a new trail element each time the mouse moves
+  const trail = document.createElement("img");
+  trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif"; // Replace with the path to your GIF
+  trail.classList.add("trail");
+
+  // Position the trail element at the cursor position
+  trail.style.left = `${event.clientX}px`;
+  trail.style.top = `${event.clientY}px`;
+
+  // Add the trail element to the section_contact
+  document.querySelector(".section_contact").appendChild(trail);
+
+  // Apply a slight random offset to the position for a dynamic effect
+  const offsetX = (Math.random() - 0.5) * 10;
+  const offsetY = (Math.random() - 0.5) * 10;
+  trail.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(0.8)`; 
+
+  // After a delay, fade out and remove the trail element
+  setTimeout(() => {
+    trail.style.opacity = "0"; // Trigger fade-out
+    setTimeout(() => trail.remove(), 800); // Remove the element after fade-out
+  }, 100);
+});
