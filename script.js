@@ -226,27 +226,64 @@ document.querySelectorAll(".work-item").forEach((project) => {
 
 /* Contact Section GIF cursor trail */
 
+// https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif
+let lastTrailTime = 0; // Track the last time a trail image was created
+let lastCursorX = 0; // Track the last cursor X position
+let lastCursorY = 0; // Track the last cursor Y position
+const trailDelay = 75; // Delay in ms between creating new trail elements
+const maxTrailElements = 5; // Maximum number of images allowed on screen at once
+const minDistance = 30; // Minimum distance in pixels the cursor must travel
+
 document.querySelector(".section_contact").addEventListener("mousemove", (event) => {
-  // Create a new trail element each time the mouse moves
-  const trail = document.createElement("img");
-  trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif"; // Replace with the path to your GIF
-  trail.classList.add("trail");
+  const now = Date.now();
+  const dx = event.clientX - lastCursorX; // Change in X
+  const dy = event.clientY - lastCursorY; // Change in Y
+  const distance = Math.sqrt(dx * dx + dy * dy); // Calculate distance
 
-  // Position the trail element at the cursor position
-  trail.style.left = `${event.clientX}px`;
-  trail.style.top = `${event.clientY}px`;
+  // Only create a new trail if enough time has passed AND distance is greater than minDistance
+  if (now - lastTrailTime > trailDelay && distance > minDistance) {
+    lastTrailTime = now;
+    lastCursorX = event.clientX; // Update last cursor X position
+    lastCursorY = event.clientY; // Update last cursor Y position
 
-  // Add the trail element to the section_contact
-  document.querySelector(".section_contact").appendChild(trail);
+    // Limit the number of images on screen by removing the oldest if we reach max
+    const trailElements = document.querySelectorAll(".trail");
+    if (trailElements.length >= maxTrailElements) {
+      trailElements[0].remove(); // Remove the oldest trail element
+    }
 
-  // Apply a slight random offset to the position for a dynamic effect
-  const offsetX = (Math.random() - 0.5) * 10;
-  const offsetY = (Math.random() - 0.5) * 10;
-  trail.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(0.8)`; 
+    // Create a new trail element
+    const trail = document.createElement("img");
+    trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif"; // Replace with your Webflow URL
+    trail.classList.add("trail");
 
-  // After a delay, fade out and remove the trail element
-  setTimeout(() => {
-    trail.style.opacity = "0"; // Trigger fade-out
-    setTimeout(() => trail.remove(), 800); // Remove the element after fade-out
-  }, 100);
+    // Position the trail element at the cursor position
+    trail.style.left = `${event.clientX}px`;
+    trail.style.top = `${event.clientY}px`;
+
+    // Add the trail element to the section_contact
+    document.querySelector(".section_contact").appendChild(trail);
+
+    // Animate the trail element with GSAP
+    gsap.fromTo(
+      trail,
+      { scale: 0, opacity: 0 }, // Start hidden
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.2,
+        ease: "power2.out",
+      }
+    );
+
+    // Fade out and remove the trail element after a short delay
+    gsap.to(trail, {
+      opacity: 0,
+      scale: 0.5,
+      duration: 0.3, // Make the fade-out quicker
+      ease: "power2.in",
+      delay: 0.75, // Start fading out sooner
+      onComplete: () => trail.remove(),
+    });
+  }
 });
