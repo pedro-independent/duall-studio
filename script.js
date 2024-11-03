@@ -226,7 +226,7 @@ document.querySelectorAll(".work-item").forEach((project) => {
 
 /* Contact Section GIF cursor trail */
 
-// https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif
+// // https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif
 let lastTrailTime = 0; // Track the last time a trail image was created
 let lastCursorX = 0; // Track the last cursor X position
 let lastCursorY = 0; // Track the last cursor Y position
@@ -286,4 +286,29 @@ document.querySelector(".section_contact").addEventListener("mousemove", (event)
       onComplete: () => trail.remove(),
     });
   }
+});
+
+
+/* Open Form */
+
+$('#form-btn').on('click', function() {
+  $('.form-modal-wrapper').toggleClass('active');
+});
+
+$('.form-close-icon').on('click', function() {
+  $('.form-modal-wrapper').toggleClass('active');
+});
+
+
+// Open modal and disable body scroll
+$('#form-btn').on('click', function (event) {
+  event.preventDefault();
+  $('.form-modal-wrapper').addClass('active');
+  $('body').addClass('no-scroll'); // Prevent background scroll
+});
+
+// Close modal and enable body scroll
+$('.form-close-icon').on('click', function () {
+  $('.form-modal-wrapper').removeClass('active');
+  $('body').removeClass('no-scroll'); // Re-enable background scroll
 });
