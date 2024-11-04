@@ -46,12 +46,12 @@ let motiveTl = gsap.timeline({
 });
 
 motiveTl.to(".studio-motive.left", {
-  x: "-12vw",
+  x: "-5vw",
 });
 motiveTl.to(
   ".studio-motive.right",
   {
-    x: "12vw",
+    x: "5vw",
   },
   0
 );
@@ -198,7 +198,7 @@ awardsItems.forEach((item) => {
 // Function to get y translation based on image height
 const getY = (element) => {
   const height = element.clientHeight;
-  const maxScrollSpeed = -300; // Negative maximum scroll speed for smallest images
+  const maxScrollSpeed = -700; // Negative maximum scroll speed for smallest images
   const minScrollSpeed = -10; // Negative minimum scroll speed for largest images
   const referenceHeight = 500; // Reference height for scaling
 
@@ -218,7 +218,7 @@ document.querySelectorAll(".work-item").forEach((project) => {
       trigger: project,
       start: "top bottom",
       end: "bottom top",
-      scrub: 1,
+      scrub: 1.2,
     },
   });
 });
@@ -226,48 +226,53 @@ document.querySelectorAll(".work-item").forEach((project) => {
 
 /* Contact Section GIF cursor trail */
 
-// // https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif
-let lastTrailTime = 0; // Track the last time a trail image was created
-let lastCursorX = 0; // Track the last cursor X position
-let lastCursorY = 0; // Track the last cursor Y position
-const trailDelay = 75; // Delay in ms between creating new trail elements
-const maxTrailElements = 5; // Maximum number of images allowed on screen at once
-const minDistance = 30; // Minimum distance in pixels the cursor must travel
+let lastTrailTime = 0;
+let lastCursorX = 0;
+let lastCursorY = 0;
+const trailDelay = 75;
+const maxTrailElements = 3;
+const minDistance = 150;
 
-document.querySelector(".section_contact").addEventListener("mousemove", (event) => {
+const contactSection = document.querySelector(".section_contact");
+
+contactSection.addEventListener("mousemove", (event) => {
   const now = Date.now();
-  const dx = event.clientX - lastCursorX; // Change in X
-  const dy = event.clientY - lastCursorY; // Change in Y
-  const distance = Math.sqrt(dx * dx + dy * dy); // Calculate distance
+  const dx = event.clientX - lastCursorX;
+  const dy = event.clientY - lastCursorY;
+  const distance = Math.sqrt(dx * dx + dy * dy);
 
-  // Only create a new trail if enough time has passed AND distance is greater than minDistance
   if (now - lastTrailTime > trailDelay && distance > minDistance) {
     lastTrailTime = now;
-    lastCursorX = event.clientX; // Update last cursor X position
-    lastCursorY = event.clientY; // Update last cursor Y position
+    lastCursorX = event.clientX;
+    lastCursorY = event.clientY;
 
-    // Limit the number of images on screen by removing the oldest if we reach max
+    // Get the bounding rectangle of the container
+    const rect = contactSection.getBoundingClientRect();
+
     const trailElements = document.querySelectorAll(".trail");
     if (trailElements.length >= maxTrailElements) {
-      trailElements[0].remove(); // Remove the oldest trail element
+      gsap.to(trailElements[0], {
+        opacity: 0,
+        scale: 0.5,
+        duration: 0.3,
+        ease: "power2.in",
+        onComplete: () => trailElements[0].remove(),
+      });
     }
 
-    // Create a new trail element
     const trail = document.createElement("img");
-    trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif"; // Replace with your Webflow URL
+    trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif";
     trail.classList.add("trail");
 
-    // Position the trail element at the cursor position
-    trail.style.left = `${event.clientX}px`;
-    trail.style.top = `${event.clientY}px`;
+    // Position the trail element relative to the container
+    trail.style.left = `${event.clientX - rect.left}px`;
+    trail.style.top = `${event.clientY - rect.top}px`;
 
-    // Add the trail element to the section_contact
-    document.querySelector(".section_contact").appendChild(trail);
+    contactSection.appendChild(trail);
 
-    // Animate the trail element with GSAP
     gsap.fromTo(
       trail,
-      { scale: 0, opacity: 0 }, // Start hidden
+      { scale: 0, opacity: 0 },
       {
         scale: 1,
         opacity: 1,
@@ -276,13 +281,12 @@ document.querySelector(".section_contact").addEventListener("mousemove", (event)
       }
     );
 
-    // Fade out and remove the trail element after a short delay
     gsap.to(trail, {
       opacity: 0,
       scale: 0.5,
-      duration: 0.3, // Make the fade-out quicker
+      duration: 0.3,
       ease: "power2.in",
-      delay: 0.75, // Start fading out sooner
+      delay: 0.75,
       onComplete: () => trail.remove(),
     });
   }
@@ -312,3 +316,51 @@ $('.form-close-icon').on('click', function () {
   $('.form-modal-wrapper').removeClass('active');
   $('body').removeClass('no-scroll'); // Re-enable background scroll
 });
+
+/* Navbar scroll */
+let tlNav = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".section_hero",
+    start: "top top",
+    end: "top top",
+    scrub: 1,
+    onEnter: () => {
+      document.querySelectorAll(".nav-link").forEach((el) => el.classList.add("active"));
+    },
+    onLeaveBack: () => {
+      document.querySelectorAll(".nav-link").forEach((el) => el.classList.remove("active"));
+    },
+  },
+});
+
+tlNav.to(".duall-logo", {
+  width: "4.5em",
+})
+
+
+/* Awards Party */
+document.addEventListener("DOMContentLoaded", () => {
+  const jsConfetti = new JSConfetti();
+
+  gsap.to({}, {
+    scrollTrigger: {
+      trigger: ".section_awards",
+      start: "15% center",
+      once: true,
+      onEnter: () => {
+        jsConfetti.addConfetti({
+          emojis: ['🎉', '✨', '💥', '🎉'],
+          confettiRadius: 6,
+          confettiNumber: 100,
+        });
+      }
+    }
+  });
+}); 
+
+/* Footer Local Time */
+setInterval(() => {
+  let e = new Date().toLocaleString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+  $(".local-time").text(e);
+}, 1000);
+
