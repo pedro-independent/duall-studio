@@ -130,16 +130,12 @@ gsap.fromTo(
 const industryTl = gsap.timeline({
   scrollTrigger: {
     trigger: ".industry-list-wrapper",
-    start: "top 70%",
+    start: "top center",
     end: "bottom top",
     scrub: true,
   }
 });
-
-industryTl.to(".industry-item.is--one", { scale: 6, y: "-50vh" })
-  .to(".industry-item.is--two", { scale: 6, y: "-50vh" },"<0.1") 
-  .to(".industry-item.is--three", { scale: 6, y: "-50vh" },"<0.1")
-  .to(".industry-item.is--four",  { scale: 6, y: "-50vh" },"<0.1");
+industryTl.to(".industry-item", { scale: 6, y: "-20vh", stagger: 0.1, });
 
 
 /* Awards Hover Effects */
@@ -226,71 +222,72 @@ document.querySelectorAll(".work-item").forEach((project) => {
 
 /* Contact Section GIF cursor trail */
 
-let lastTrailTime = 0;
-let lastCursorX = 0;
-let lastCursorY = 0;
-const trailDelay = 75;
-const maxTrailElements = 3;
-const minDistance = 150;
+// Get the contact section element
+const contactSection = document.querySelector(".contact-section"); // Update to the correct class name if needed
 
-const contactSection = document.querySelector(".section_contact");
+// Check if the contact section exists
+if (contactSection) {
+  // Add the event listener only if the element exists
+  contactSection.addEventListener("mousemove", (event) => {
+    const now = Date.now();
+    const dx = event.clientX - lastCursorX;
+    const dy = event.clientY - lastCursorY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-contactSection.addEventListener("mousemove", (event) => {
-  const now = Date.now();
-  const dx = event.clientX - lastCursorX;
-  const dy = event.clientY - lastCursorY;
-  const distance = Math.sqrt(dx * dx + dy * dy);
+    if (now - lastTrailTime > trailDelay && distance > minDistance) {
+      lastTrailTime = now;
+      lastCursorX = event.clientX;
+      lastCursorY = event.clientY;
 
-  if (now - lastTrailTime > trailDelay && distance > minDistance) {
-    lastTrailTime = now;
-    lastCursorX = event.clientX;
-    lastCursorY = event.clientY;
+      // Get the bounding rectangle of the container
+      const rect = contactSection.getBoundingClientRect();
 
-    // Get the bounding rectangle of the container
-    const rect = contactSection.getBoundingClientRect();
+      const trailElements = document.querySelectorAll(".trail");
+      if (trailElements.length >= maxTrailElements) {
+        gsap.to(trailElements[0], {
+          opacity: 0,
+          scale: 0.5,
+          duration: 0.3,
+          ease: "power2.in",
+          onComplete: () => trailElements[0].remove(),
+        });
+      }
 
-    const trailElements = document.querySelectorAll(".trail");
-    if (trailElements.length >= maxTrailElements) {
-      gsap.to(trailElements[0], {
+      const trail = document.createElement("img");
+      trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif";
+      trail.classList.add("trail");
+
+      // Position the trail element relative to the container
+      trail.style.left = `${event.clientX - rect.left}px`;
+      trail.style.top = `${event.clientY - rect.top}px`;
+
+      contactSection.appendChild(trail);
+
+      gsap.fromTo(
+        trail,
+        { scale: 0, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.2,
+          ease: "power2.out",
+        }
+      );
+
+      gsap.to(trail, {
         opacity: 0,
         scale: 0.5,
         duration: 0.3,
         ease: "power2.in",
-        onComplete: () => trailElements[0].remove(),
+        delay: 0.75,
+        onComplete: () => trail.remove(),
       });
     }
+  });
+} else {
+  console.log("contactSection not found on this page.");
+}
 
-    const trail = document.createElement("img");
-    trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif";
-    trail.classList.add("trail");
-
-    // Position the trail element relative to the container
-    trail.style.left = `${event.clientX - rect.left}px`;
-    trail.style.top = `${event.clientY - rect.top}px`;
-
-    contactSection.appendChild(trail);
-
-    gsap.fromTo(
-      trail,
-      { scale: 0, opacity: 0 },
-      {
-        scale: 1,
-        opacity: 1,
-        duration: 0.2,
-        ease: "power2.out",
-      }
-    );
-
-    gsap.to(trail, {
-      opacity: 0,
-      scale: 0.5,
-      duration: 0.3,
-      ease: "power2.in",
-      delay: 0.75,
-      onComplete: () => trail.remove(),
-    });
-  }
-});
 
 
 /* Open Form */
@@ -339,28 +336,111 @@ tlNav.to(".duall-logo", {
 
 
 /* Awards Party */
-document.addEventListener("DOMContentLoaded", () => {
-  const jsConfetti = new JSConfetti();
+// document.addEventListener("DOMContentLoaded", () => {
+//   const jsConfetti = new JSConfetti();
 
-  gsap.to({}, {
-    scrollTrigger: {
-      trigger: ".section_awards",
-      start: "15% center",
-      once: true,
-      onEnter: () => {
-        jsConfetti.addConfetti({
-          emojis: ['🎉', '✨', '💥', '🎉'],
-          confettiRadius: 6,
-          confettiNumber: 100,
-        });
-      }
-    }
-  });
-}); 
+//   gsap.to({}, {
+//     scrollTrigger: {
+//       trigger: ".section_awards",
+//       start: "15% center",
+//       once: true,
+//       onEnter: () => {
+//         jsConfetti.addConfetti({
+//           emojis: ['🎉', '✨', '💥', '🎉'],
+//           confettiRadius: 6,
+//           confettiNumber: 100,
+//         });
+//       }
+//     }
+//   });
+// }); 
 
 /* Footer Local Time */
 setInterval(() => {
   let e = new Date().toLocaleString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
   $(".local-time").text(e);
 }, 1000);
+
+
+/* 404 Compass */
+
+// document.addEventListener("DOMContentLoaded", function() {
+//   const compassWrapper = document.querySelector(".compass-wrapper");
+//   const outerCompass = document.querySelector(".outer-compass");
+//   const compassArrow = document.querySelector(".compass-arrow");
+
+//   if (!compassWrapper || !outerCompass || !compassArrow) {
+//     console.error("Compass elements are missing.");
+//     return;
+//   }
+
+//   // Apply CSS-based transform-origin to position the arrow further from the circle center
+//   compassArrow.style.transformOrigin = "50% calc(100% + 10px)"; // Fine-tune the origin to maintain distance
+  
+//   // Calculate position and dimensions for the orbit based on compass-wrapper
+//   const compassRect = compassWrapper.getBoundingClientRect();
+//   const outerRect = outerCompass.getBoundingClientRect();
+  
+//   // Calculate exact center relative to compassWrapper
+//   const compassCenterX = outerRect.left + outerRect.width / 2 - compassRect.left;
+//   const compassCenterY = outerRect.top + outerRect.height / 2 - compassRect.top;
+
+//   // Set orbit radius to be a bit beyond outer-compass by adding 10px
+//   const orbitRadius = (outerRect.width / 2) + 10; 
+
+//   document.addEventListener("mousemove", (event) => {
+//     const angle = Math.atan2(
+//       event.clientY - (compassRect.top + compassCenterY),
+//       event.clientX - (compassRect.left + compassCenterX)
+//     );
+
+//     // Calculate x and y position for the arrow based on updated orbitRadius and angle
+//     const arrowX = compassCenterX + orbitRadius * Math.cos(angle);
+//     const arrowY = compassCenterY + orbitRadius * Math.sin(angle);
+
+//     // Move and rotate the arrow smoothly around the circle with the offset
+//     compassArrow.style.left = `${arrowX}px`;
+//     compassArrow.style.top = `${arrowY}px`;
+//     compassArrow.style.transform = `rotate(${angle * (180 / Math.PI) + 90}deg)`;
+//   });
+// });
+
+document.addEventListener("DOMContentLoaded", function() {
+  const compassWrapper = document.querySelector(".compass-wrapper");
+  const compassArrow = document.querySelector(".compass-arrow");
+  const outerCompass = document.querySelector(".outer-compass");
+
+  if (!compassWrapper || !compassArrow || !outerCompass) {
+    console.error("Compass elements are missing.");
+    return;
+  }
+
+  // Calculate the center of the .outer-compass element
+  const compassRect = outerCompass.getBoundingClientRect();
+  const compassCenterX = compassRect.left + compassRect.width / 2;
+  const compassCenterY = compassRect.top + compassRect.height / 2;
+
+  // Event listener for mouse movement
+  document.addEventListener("mousemove", (event) => {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    // Calculate the angle between the mouse position and compass center
+    const angle = Math.atan2(mouseY - compassCenterY, mouseX - compassCenterX);
+    const degree = angle * (180 / Math.PI) + 90; // Adjust to make arrow point correctly
+
+    // Rotate the .compass-arrow element
+    compassArrow.style.transform = `rotate(${degree}deg)`;
+  });
+});
+
+
+
+
+
+
+
+
+
+
 
