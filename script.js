@@ -336,24 +336,24 @@ tlNav.to(".duall-logo", {
 
 
 /* Awards Party */
-// document.addEventListener("DOMContentLoaded", () => {
-//   const jsConfetti = new JSConfetti();
+document.addEventListener("DOMContentLoaded", () => {
+  const jsConfetti = new JSConfetti();
 
-//   gsap.to({}, {
-//     scrollTrigger: {
-//       trigger: ".section_awards",
-//       start: "15% center",
-//       once: true,
-//       onEnter: () => {
-//         jsConfetti.addConfetti({
-//           emojis: ['🎉', '✨', '💥', '🎉'],
-//           confettiRadius: 6,
-//           confettiNumber: 100,
-//         });
-//       }
-//     }
-//   });
-// }); 
+  gsap.to({}, {
+    scrollTrigger: {
+      trigger: ".section_awards",
+      start: "15% center",
+      once: true,
+      onEnter: () => {
+        jsConfetti.addConfetti({
+          emojis: ['🎉', '✨', '💥', '🎉'],
+          confettiRadius: 6,
+          confettiNumber: 100,
+        });
+      }
+    }
+  });
+}); 
 
 /* Footer Local Time */
 setInterval(() => {
