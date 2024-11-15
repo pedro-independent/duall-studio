@@ -221,9 +221,18 @@ document.querySelectorAll(".work-item").forEach((project) => {
 
 
 /* Contact Section GIF cursor trail */
+/* Contact Section GIF cursor trail */
+
+// Variables for tracking cursor position and trail logic
+let lastCursorX = 0; // Initial X position
+let lastCursorY = 0; // Initial Y position
+let lastTrailTime = 0; // Timestamp of the last trail
+const trailDelay = 100; // Minimum delay (in ms) between trails
+const minDistance = 10; // Minimum cursor movement distance for trail to appear
+const maxTrailElements = 10; // Maximum number of trail elements allowed
 
 // Get the contact section element
-const contactSection = document.querySelector(".contact-section"); // Update to the correct class name if needed
+const contactSection = document.querySelector(".section_contact"); // Update to the correct class name if needed
 
 // Check if the contact section exists
 if (contactSection) {
@@ -287,6 +296,7 @@ if (contactSection) {
 } else {
   console.log("contactSection not found on this page.");
 }
+
 
 
 
@@ -404,35 +414,35 @@ setInterval(() => {
 //     compassArrow.style.transform = `rotate(${angle * (180 / Math.PI) + 90}deg)`;
 //   });
 // });
+////////////////
+// document.addEventListener("DOMContentLoaded", function() {
+//   const compassWrapper = document.querySelector(".compass-wrapper");
+//   const compassArrow = document.querySelector(".compass-arrow");
+//   const outerCompass = document.querySelector(".outer-compass");
 
-document.addEventListener("DOMContentLoaded", function() {
-  const compassWrapper = document.querySelector(".compass-wrapper");
-  const compassArrow = document.querySelector(".compass-arrow");
-  const outerCompass = document.querySelector(".outer-compass");
+//   if (!compassWrapper || !compassArrow || !outerCompass) {
+//     console.error("Compass elements are missing.");
+//     return;
+//   }
 
-  if (!compassWrapper || !compassArrow || !outerCompass) {
-    console.error("Compass elements are missing.");
-    return;
-  }
+//   // Calculate the center of the .outer-compass element
+//   const compassRect = outerCompass.getBoundingClientRect();
+//   const compassCenterX = compassRect.left + compassRect.width / 2;
+//   const compassCenterY = compassRect.top + compassRect.height / 2;
 
-  // Calculate the center of the .outer-compass element
-  const compassRect = outerCompass.getBoundingClientRect();
-  const compassCenterX = compassRect.left + compassRect.width / 2;
-  const compassCenterY = compassRect.top + compassRect.height / 2;
+//   // Event listener for mouse movement
+//   document.addEventListener("mousemove", (event) => {
+//     const mouseX = event.clientX;
+//     const mouseY = event.clientY;
 
-  // Event listener for mouse movement
-  document.addEventListener("mousemove", (event) => {
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
+//     // Calculate the angle between the mouse position and compass center
+//     const angle = Math.atan2(mouseY - compassCenterY, mouseX - compassCenterX);
+//     const degree = angle * (180 / Math.PI) + 90; // Adjust to make arrow point correctly
 
-    // Calculate the angle between the mouse position and compass center
-    const angle = Math.atan2(mouseY - compassCenterY, mouseX - compassCenterX);
-    const degree = angle * (180 / Math.PI) + 90; // Adjust to make arrow point correctly
-
-    // Rotate the .compass-arrow element
-    compassArrow.style.transform = `rotate(${degree}deg)`;
-  });
-});
+//     // Rotate the .compass-arrow element
+//     compassArrow.style.transform = `rotate(${degree}deg)`;
+//   });
+// });
 
 
 
