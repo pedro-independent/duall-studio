@@ -475,14 +475,3 @@ setInterval(() => {
 //     compassArrow.style.transform = `rotate(${degree}deg)`;
 //   });
 // });
-
-
-
-
-
-
-
-
-
-
-
