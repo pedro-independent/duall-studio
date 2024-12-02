@@ -1,38 +1,57 @@
 gsap.registerPlugin(ScrollTrigger);
 
-/* Phones Flying */
-let phoneTl = gsap.timeline({
+/* Team Image Expanding */
+
+let tlVideo = gsap.timeline({
   scrollTrigger: {
-    trigger: ".phone-container",
-    start: "top center",
-    end: "bottom center",
+    trigger: ".video-wrap",
+    start: "top 60%",
+    end: "bottom 60%",
     scrub: true,
   },
 });
 
-phoneTl.to(".phone-wrap.left", {
-  y: "-50vh",
-  x: "-15vw",
-  rotationZ: -15,
+tlVideo.to(".video-wrap", {
+  width: "80vw",
+  height: "75%",
+  onComplete: () => ScrollTrigger.refresh()
 });
 
-phoneTl.to(
-  ".phone-wrap.middle",
-  {
-    y: "-50vh",
-  },
-  0
-);
 
-phoneTl.to(
-  ".phone-wrap.right",
-  {
-    y: "-50vh",
-    x: "15vw",
-    rotationZ: 24,
-  },
-  0
-);
+
+// /* Phones Flying */
+// let phoneTl = gsap.timeline({
+//   scrollTrigger: {
+//     trigger: ".phone-container",
+//     start: "top center",
+//     end: "bottom center",
+//     scrub: true,
+//   },
+// });
+
+// phoneTl.to(".phone-wrap.left", {
+//   y: "-50vh",
+//   x: "-15vw",
+//   rotationZ: -15,
+// });
+
+// phoneTl.to(
+//   ".phone-wrap.middle",
+//   {
+//     y: "-50vh",
+//   },
+//   0
+// );
+
+// phoneTl.to(
+//   ".phone-wrap.right",
+//   {
+//     y: "-50vh",
+//     x: "15vw",
+//     rotationZ: 24,
+//   },
+//   0
+// );
 
 /* Motive Expanding */
 
@@ -224,80 +243,79 @@ document.querySelectorAll(".work-item").forEach((project) => {
 /* Contact Section GIF cursor trail */
 
 // Variables for tracking cursor position and trail logic
-let lastCursorX = 0; // Initial X position
-let lastCursorY = 0; // Initial Y position
-let lastTrailTime = 0; // Timestamp of the last trail
-const trailDelay = 100; // Minimum delay (in ms) between trails
-const minDistance = 10; // Minimum cursor movement distance for trail to appear
-const maxTrailElements = 10; // Maximum number of trail elements allowed
 
-// Get the contact section element
-const contactSection = document.querySelector(".section_contact"); // Update to the correct class name if needed
+// let lastCursorX = 0; // Initial X position
+// let lastCursorY = 0; // Initial Y position
+// let lastTrailTime = 0; // Timestamp of the last trail
+// const trailDelay = 100; // Minimum delay (in ms) between trails
+// const minDistance = 10; // Minimum cursor movement distance for trail to appear
+// const maxTrailElements = 10; // Maximum number of trail elements allowed
 
-// Check if the contact section exists
-if (contactSection) {
-  // Add the event listener only if the element exists
-  contactSection.addEventListener("mousemove", (event) => {
-    const now = Date.now();
-    const dx = event.clientX - lastCursorX;
-    const dy = event.clientY - lastCursorY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+// // Get the contact section element
+// const contactSection = document.querySelector(".section_contact"); // Update to the correct class name if needed
 
-    if (now - lastTrailTime > trailDelay && distance > minDistance) {
-      lastTrailTime = now;
-      lastCursorX = event.clientX;
-      lastCursorY = event.clientY;
+// // Check if the contact section exists
+// if (contactSection) {
+//   // Add the event listener only if the element exists
+//   contactSection.addEventListener("mousemove", (event) => {
+//     const now = Date.now();
+//     const dx = event.clientX - lastCursorX;
+//     const dy = event.clientY - lastCursorY;
+//     const distance = Math.sqrt(dx * dx + dy * dy);
 
-      // Get the bounding rectangle of the container
-      const rect = contactSection.getBoundingClientRect();
+//     if (now - lastTrailTime > trailDelay && distance > minDistance) {
+//       lastTrailTime = now;
+//       lastCursorX = event.clientX;
+//       lastCursorY = event.clientY;
 
-      const trailElements = document.querySelectorAll(".trail");
-      if (trailElements.length >= maxTrailElements) {
-        gsap.to(trailElements[0], {
-          opacity: 0,
-          scale: 0.5,
-          duration: 0.3,
-          ease: "power2.in",
-          onComplete: () => trailElements[0].remove(),
-        });
-      }
+//       // Get the bounding rectangle of the container
+//       const rect = contactSection.getBoundingClientRect();
 
-      const trail = document.createElement("img");
-      trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif";
-      trail.classList.add("trail");
+//       const trailElements = document.querySelectorAll(".trail");
+//       if (trailElements.length >= maxTrailElements) {
+//         gsap.to(trailElements[0], {
+//           opacity: 0,
+//           scale: 0.5,
+//           duration: 0.3,
+//           ease: "power2.in",
+//           onComplete: () => trailElements[0].remove(),
+//         });
+//       }
 
-      // Position the trail element relative to the container
-      trail.style.left = `${event.clientX - rect.left}px`;
-      trail.style.top = `${event.clientY - rect.top}px`;
+//       const trail = document.createElement("img");
+//       trail.src = "https://cdn.prod.website-files.com/66fc152695f7656df535cb41/672268768242b00e997ccf63_cta-img.gif";
+//       trail.classList.add("trail");
 
-      contactSection.appendChild(trail);
+//       // Position the trail element relative to the container
+//       trail.style.left = `${event.clientX - rect.left}px`;
+//       trail.style.top = `${event.clientY - rect.top}px`;
 
-      gsap.fromTo(
-        trail,
-        { scale: 0, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.2,
-          ease: "power2.out",
-        }
-      );
+//       contactSection.appendChild(trail);
 
-      gsap.to(trail, {
-        opacity: 0,
-        scale: 0.5,
-        duration: 0.3,
-        ease: "power2.in",
-        delay: 0.75,
-        onComplete: () => trail.remove(),
-      });
-    }
-  });
-} else {
-  console.log("contactSection not found on this page.");
-}
+//       gsap.fromTo(
+//         trail,
+//         { scale: 0, opacity: 0 },
+//         {
+//           scale: 1,
+//           opacity: 1,
+//           duration: 0.2,
+//           ease: "power2.out",
+//         }
+//       );
 
-
+//       gsap.to(trail, {
+//         opacity: 0,
+//         scale: 0.5,
+//         duration: 0.3,
+//         ease: "power2.in",
+//         delay: 0.75,
+//         onComplete: () => trail.remove(),
+//       });
+//     }
+//   });
+// } else {
+//   console.log("contactSection not found on this page.");
+// }
 
 
 /* Open Form */
@@ -346,24 +364,24 @@ tlNav.to(".duall-logo", {
 
 
 /* Awards Party */
-document.addEventListener("DOMContentLoaded", () => {
-  const jsConfetti = new JSConfetti();
+// document.addEventListener("DOMContentLoaded", () => {
+//   const jsConfetti = new JSConfetti();
 
-  gsap.to({}, {
-    scrollTrigger: {
-      trigger: ".section_awards",
-      start: "15% center",
-      once: true,
-      onEnter: () => {
-        jsConfetti.addConfetti({
-          emojis: ['🎉', '✨', '💥', '🎉'],
-          confettiRadius: 6,
-          confettiNumber: 100,
-        });
-      }
-    }
-  });
-}); 
+//   gsap.to({}, {
+//     scrollTrigger: {
+//       trigger: ".section_awards",
+//       start: "15% center",
+//       once: true,
+//       onEnter: () => {
+//         jsConfetti.addConfetti({
+//           emojis: ['🎉', '✨', '💥', '🎉'],
+//           confettiRadius: 6,
+//           confettiNumber: 100,
+//         });
+//       }
+//     }
+//   });
+// }); 
 
 /* Footer Local Time */
 setInterval(() => {
