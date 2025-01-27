@@ -325,17 +325,8 @@ if (contactSection) {
 
 /* Open Form */
 
-$('#form-btn').on('click', function() {
-  $('.form-modal-wrapper').toggleClass('active');
-});
-
-// $('.form-close-icon').on('click', function() {
-//   $('.form-modal-wrapper').toggleClass('active');
-// });
-
-
 // Open modal and disable body scroll
-$('#form-btn').on('click', function (event) {
+$('#form-btn, #form-open').on('click', function (event) {
   event.preventDefault();
   $('.form-modal-wrapper').addClass('active');
   gsap.to(".form-modal", {x: "0%", duration: 0.75, ease: "power2.out"});
@@ -354,6 +345,18 @@ $('.form-close-icon, .form-modal-bg').on('click', function () {
     }
   });
 });
+
+// Prevent background scroll while allowing modal scroll
+$('.form-modal').on('wheel touchmove', function (event) {
+  event.stopPropagation(); // Allow scroll inside the modal
+});
+
+$(document).on('wheel touchmove', function (event) {
+  if ($('.form-modal-wrapper').hasClass('active')) {
+    event.preventDefault(); // Prevent background scroll
+  }
+});
+
 
 
 /* Navbar scroll */
